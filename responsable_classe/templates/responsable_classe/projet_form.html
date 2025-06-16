@@ -1,0 +1,190 @@
+{% extends "responsable_classe/base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">{% if form.instance.pk %}Modifier le projet{% else %}Créer un projet{% endif %}</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <!-- Titre -->
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.titre.id_for_label }}" class="form-label">Titre</label>
+                <input type="text" name="{{ form.titre.name }}" id="{{ form.titre.id_for_label }}"
+                       value="{{ form.titre.value|default_if_none:'' }}"
+                       class="form-control {% if form.titre.errors %}is-invalid{% endif %}" required>
+                {% if form.titre.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.titre.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if form.titre.help_text %}
+                    <small id="titreHelp" class="form-text text-muted">{{ form.titre.help_text }}</small>
+                {% endif %}
+            </div>
+
+            <!-- Classe -->
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.classe.id_for_label }}" class="form-label">Classe</label>
+                {{ form.classe }}
+                {% if form.classe.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.classe.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if form.classe.help_text %}
+                    <small id="classeHelp" class="form-text text-muted">{{ form.classe.help_text }}</small>
+                {% endif %}
+            </div>
+
+            <!-- Matiere -->
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.matiere.id_for_label }}" class="form-label">Matière</label>
+                {{ form.matiere }}
+                {% if form.matiere.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.matiere.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if form.matiere.help_text %}
+                    <small id="matiereHelp" class="form-text text-muted">{{ form.matiere.help_text }}</small>
+                {% endif %}
+            </div>
+
+            <!-- Type Projet -->
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.type_projet.id_for_label }}" class="form-label">Type de projet</label>
+                {{ form.type_projet }}
+                {% if form.type_projet.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.type_projet.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if form.type_projet.help_text %}
+                    <small id="typeProjetHelp" class="form-text text-muted">{{ form.type_projet.help_text }}</small>
+                {% endif %}
+            </div>
+
+            <!-- Date Attribution -->
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.date_attribution.id_for_label }}" class="form-label">Date d'attribution</label>
+                {{ form.date_attribution }}
+                {% if form.date_attribution.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.date_attribution.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if form.date_attribution.help_text %}
+                    <small id="dateAttributionHelp" class="form-text text-muted">{{ form.date_attribution.help_text }}</small>
+                {% endif %}
+            </div>
+
+            <!-- Date Limite -->
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.date_limite.id_for_label }}" class="form-label">Date limite</label>
+                {{ form.date_limite }}
+                {% if form.date_limite.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.date_limite.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if form.date_limite.help_text %}
+                    <small id="dateLimiteHelp" class="form-text text-muted">{{ form.date_limite.help_text }}</small>
+                {% endif %}
+            </div>
+
+            <!-- Coefficient -->
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.coefficient.id_for_label }}" class="form-label">Coefficient</label>
+                <input type="number" name="{{ form.coefficient.name }}" id="{{ form.coefficient.id_for_label }}"
+                       value="{{ form.coefficient.value|default_if_none:'1' }}"
+                       class="form-control {% if form.coefficient.errors %}is-invalid{% endif %}" min="1" required>
+                {% if form.coefficient.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.coefficient.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if form.coefficient.help_text %}
+                    <small id="coefficientHelp" class="form-text text-muted">{{ form.coefficient.help_text }}</small>
+                {% endif %}
+            </div>
+
+            <!-- Description -->
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                <textarea name="{{ form.description.name }}" id="{{ form.description.id_for_label }}"
+                          class="form-control {% if form.description.errors %}is-invalid{% endif %}" rows="4">{{ form.description.value|default_if_none:'' }}</textarea>
+                {% if form.description.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.description.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if form.description.help_text %}
+                    <small id="descriptionHelp" class="form-text text-muted">{{ form.description.help_text }}</small>
+                {% endif %}
+            </div>
+
+            <!-- Consignes -->
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.consignes.id_for_label }}" class="form-label">Consignes</label>
+                <textarea name="{{ form.consignes.name }}" id="{{ form.consignes.id_for_label }}"
+                          class="form-control {% if form.consignes.errors %}is-invalid{% endif %}" rows="4">{{ form.consignes.value|default_if_none:'' }}</textarea>
+                {% if form.consignes.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.consignes.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if form.consignes.help_text %}
+                    <small id="consignesHelp" class="form-text text-muted">{{ form.consignes.help_text }}</small>
+                {% endif %}
+            </div>
+
+            <!-- Fichier Sujet -->
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.fichier_sujet.id_for_label }}" class="form-label">Fichier sujet</label>
+                <input type="file" name="{{ form.fichier_sujet.name }}" id="{{ form.fichier_sujet.id_for_label }}"
+                       class="form-control {% if form.fichier_sujet.errors %}is-invalid{% endif %}">
+                {% if form.instance.fichier_sujet %}
+                    <small class="form-text text-muted">
+                        Fichier actuel: <a href="{{ form.instance.fichier_sujet.url }}" target="_blank">{{ form.instance.fichier_sujet.name }}</a>
+                        <div class="form-check mt-2">
+                            <input type="checkbox" name="fichier_sujet-clear" id="fichier_sujet-clear" class="form-check-input">
+                            <label for="fichier_sujet-clear" class="form-check-label">Supprimer le fichier actuel</label>
+                        </div>
+                    </small>
+                {% endif %}
+                {% if form.fichier_sujet.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.fichier_sujet.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if form.fichier_sujet.help_text %}
+                    <small id="fichierSujetHelp" class="form-text text-muted">{{ form.fichier_sujet.help_text }}</small>
+                {% endif %}
+            </div>
+        </div>
+        <div class="mt-3">
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+            <a href="{% url 'responsable_classe:projet_list' %}" class="btn btn-secondary" onclick="return confirm('Voulez-vous vraiment annuler ? Les modifications non enregistrées seront perdues.');">Annuler</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

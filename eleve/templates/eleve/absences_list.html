@@ -1,0 +1,182 @@
+{% extends 'eleve/base.html' %}
+{% load static %}
+
+{% block title %}Mes absences{% endblock %}
+
+{% block extra_css %}
+<style>
+    .absence-justifiee { background-color: #d4edda; }
+    .absence-non-justifiee { background-color: #f8d7da; }
+    .stat-card { border-left: 4px solid #dc3545; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3">Mes absences</h1>
+    <a href="{% url 'eleve:dashboard' %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left"></i> Retour au tableau de bord
+    </a>
+</div>
+
+<!-- Statistiques des absences -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card stat-card">
+            <div class="card-body text-center">
+                <h3 class="text-danger">{{ total_absences|default:0 }}</h3>
+                <p class="mb-0">Total des absences</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card" style="border-left: 4px solid #28a745;">
+            <div class="card-body text-center">
+                <h3 class="text-success">{{ absences_justifiees|default:0 }}</h3>
+                <p class="mb-0">Absences justifiées</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card" style="border-left: 4px solid #ffc107;">
+            <div class="card-body text-center">
+                <h3 class="text-warning">{{ absences_non_justifiees|default:0 }}</h3>
+                <p class="mb-0">Non justifiées</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if absences %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">
+            <i class="fas fa-calendar-times"></i> Liste de mes absences
+        </h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="thead-light">
+                    <tr>
+                        <th><i class="fas fa-calendar"></i> Date</th>
+                        <th><i class="fas fa-clock"></i> Période</th>
+                        <th><i class="fas fa-check-circle"></i> Statut</th>
+                        <th><i class="fas fa-comment"></i> Motif</th>
+                        <th><i class="fas fa-user-tie"></i> Professeur</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for absence in absences %}
+                    <tr class="{% if absence.justifiee %}absence-justifiee{% else %}absence-non-justifiee{% endif %}">
+                        <td>
+                            <strong>{{ absence.date|date:"l d F Y" }}</strong>
+                            <br><small class="text-muted">{{ absence.date|date:"d/m/Y" }}</small>
+                        </td>
+                        <td>
+                            {% if absence.heure_debut and absence.heure_fin %}
+                                <i class="fas fa-clock text-muted"></i>
+                                {{ absence.heure_debut }} - {{ absence.heure_fin }}
+                            {% else %}
+                                <span class="text-muted">Journée complète</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if absence.justifiee %}
+                                <span class="badge badge-success">
+                                    <i class="fas fa-check"></i> Justifiée
+                                </span>
+                            {% else %}
+                                <span class="badge badge-danger">
+                                    <i class="fas fa-times"></i> Non justifiée
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if absence.motif %}
+                                <span title="{{ absence.motif }}">
+                                    {{ absence.motif|truncatewords:10 }}
+                                </span>
+                            {% else %}
+                                <span class="text-muted">Aucun motif renseigné</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if absence.matiere %}
+                                <strong>{{ absence.matiere.nom }}</strong>
+                                {% if absence.matiere.professeur %}
+                                <br><small class="text-muted">{{ absence.matiere.professeur.get_full_name }}</small>
+                                {% endif %}
+                            {% else %}
+                                <span class="text-muted">Non spécifié</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    {% if is_paginated %}
+    <div class="card-footer">
+        <nav aria-label="Navigation des pages">
+            <ul class="pagination justify-content-center mb-0">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">
+                            <i class="fas fa-angle-double-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                            <i class="fas fa-angle-left"></i> Précédent
+                        </a>
+                    </li>
+                {% endif %}
+                
+                <li class="page-item active">
+                    <span class="page-link">
+                        Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
+                    </span>
+                </li>
+                
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                            Suivant <i class="fas fa-angle-right"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+
+{% if absences_non_justifiees > 0 %}
+<div class="alert alert-warning mt-4">
+    <i class="fas fa-exclamation-triangle"></i>
+    <strong>Attention !</strong> Vous avez {{ absences_non_justifiees }} absence{{ absences_non_justifiees|pluralize }} non justifiée{{ absences_non_justifiees|pluralize }}.
+    Pensez à fournir les justificatifs nécessaires à votre responsable de classe.
+</div>
+{% endif %}
+
+{% else %}
+<div class="card">
+    <div class="card-body text-center py-5">
+        <i class="fas fa-calendar-check fa-5x text-success mb-3"></i>
+        <h4 class="text-success">Aucune absence enregistrée</h4>
+        <p class="text-muted">Félicitations ! Vous n'avez aucune absence à votre actif.</p>
+        <a href="{% url 'eleve:dashboard' %}" class="btn btn-success">
+            <i class="fas fa-home"></i> Retour au tableau de bord
+        </a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block page_title %}
+    {% if object %}Modifier {{ object }}{% else %}Ajouter une matière{% endif %}
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'responsable_filiere:dashboard' %}">Tableau de bord</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'responsable_filiere:matiere_list' %}">Matières</a></li>
+        <li class="breadcrumb-item active" aria-current="page">
+            {% if object %}Modifier {{ object }}{% else %}Ajouter une matière{% endif %}
+        </li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="{{ form.nom.id_for_label }}" class="form-label">Nom</label>
+                    {{ form.nom }}
+                    {% if form.nom.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.nom.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.code.id_for_label }}" class="form-label">Code</label>
+                    {{ form.code }}
+                    {% if form.code.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.code.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="{{ form.coefficient.id_for_label }}" class="form-label">Coefficient</label>
+                    {{ form.coefficient }}
+                    {% if form.coefficient.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.coefficient.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.description.errors }}
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Classes associées</label>
+                {{ form.classes }}
+                {% if form.classes.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.classes.errors }}
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="d-flex justify-content-end">
+                <a href="{% if object %}{% url 'responsable_filiere:matiere_detail' object.pk %}{% else %}{% url 'responsable_filiere:matiere_list' %}{% endif %}" class="btn btn-secondary me-2">
+                    Annuler
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    {% if object %}Mettre à jour{% else %}Ajouter{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

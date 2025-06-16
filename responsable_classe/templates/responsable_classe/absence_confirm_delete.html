@@ -1,0 +1,49 @@
+{% extends 'responsable_classe/base.html' %}
+{% load static %}
+
+{% block title %}Confirmer la suppression{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white">
+            <h3 class="card-title">
+                <i class="fas fa-exclamation-triangle"></i> Confirmer la suppression
+            </h3>
+        </div>
+        <div class="card-body">
+            <p class="lead">Êtes-vous sûr de vouloir supprimer cette absence ?</p>
+            
+            <div class="alert alert-warning">
+                <h5 class="alert-heading">Détails de l'absence :</h5>
+                <ul class="mb-0">
+                    <li><strong>Élève :</strong> {{ object.eleve.nom }}</li>
+                    <li><strong>Classe :</strong> {{ object.eleve.classe }}</li>
+                    <li><strong>Date :</strong> {{ object.date|date:"d/m/Y" }}</li>
+                    <li><strong>Matière :</strong> {{ object.matiere.nom|default:"Non spécifiée" }}</li>
+                    <li><strong>Statut :</strong> 
+                        <span class="badge badge-{% if object.justifiee %}success{% else %}danger{% endif %}">
+                            {{ object.justifiee|yesno:"Justifiée,Non justifiée" }}
+                        </span>
+                    </li>
+                    {% if object.motif %}
+                    <li><strong>Motif :</strong> {{ object.motif }}</li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{% url 'responsable_classe:absence_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Annuler
+                    </a>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash-alt"></i> Confirmer la suppression
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

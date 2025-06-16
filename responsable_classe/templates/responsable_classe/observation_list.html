@@ -1,0 +1,117 @@
+{% extends "responsable_classe/base.html" %}
+{% block content %}
+<div class="page-header">
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="mb-0">
+                    <i class="fas fa-user-times me-3"></i>
+                    Liste des observations
+                </h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Filter Form -->
+    <form method="get" class="mb-4">
+        <div class="row">
+            <div class="col-md-4">
+                <label for="type" class="form-label">Type d'observation</label>
+                <select name="type" id="type" class="form-select">
+                    <option value="">Tous les types</option>
+                    {% for value, label in types %}
+                        <option value="{{ value }}" {% if request.GET.type == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="classe" class="form-label">Classe</label>
+                <select name="classe" id="classe" class="form-select">
+                    <option value="">Toutes les classes</option>
+                    {% for classe in classes %}
+                        <option value="{{ classe.id }}" {% if request.GET.classe == classe.id|stringformat:"s" %}selected{% endif %}>{{ classe }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4 align-self-end">
+                <button type="submit" class="btn btn-primary">Filtrer</button>
+                <a href="{% url 'responsable_classe:observation_create' %}" class="btn btn-success">Ajouter</a>
+            </div>
+        </div>
+    </form>
+
+    <!-- Observations Table -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Élève</th>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Titre</th>
+                <th>Suivi nécessaire</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for observation in observations %}
+            <tr>
+                <td>{{ observation.eleve }}</td>
+                <td>{{ observation.date|date:"d/m/Y" }}</td>
+                <td>{{ observation.get_type_observation_display }}</td>
+                <td>{{ observation.titre }}</td>
+                <td>{{ observation.suivi_necessaire|yesno:"Oui,Non" }}</td>
+                <td>
+                    <a href="{% url 'responsable_classe:observation_detail' observation.pk %}" class="btn btn-sm btn-info">Détails</a>
+                    <a href="{% url 'responsable_classe:observation_update' observation.pk %}" class="btn btn-sm btn-warning">Modifier</a>
+                    <a href="{% url 'responsable_classe:observation_delete' observation.pk %}" class="btn btn-sm btn-danger">Supprimer</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">Aucune observation trouvée.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}{% if request.GET.classe %}&classe={{ request.GET.classe }}{% endif %}">Précédent</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Précédent</span>
+                </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}{% if request.GET.classe %}&classe={{ request.GET.classe }}{% endif %}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}{% if request.GET.classe %}&classe={{ request.GET.classe }}{% endif %}">Suivant</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Suivant</span>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

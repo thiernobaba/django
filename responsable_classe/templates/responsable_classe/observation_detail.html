@@ -1,0 +1,21 @@
+{% extends "responsable_classe/base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">{{ observation.titre }}</h1>
+    <div class="card">
+        <div class="card-body">
+            <p><strong>Élève:</strong> {{ observation.eleve }}</p>
+            <p><strong>Date:</strong> {{ observation.date|date:"d/m/Y" }}</p>
+            <p><strong>Type:</strong> {{ observation.get_type_observation_display }}</p>
+            <p><strong>Matière:</strong> {{ observation.matiere|default:"-" }}</p>
+            <p><strong>Contenu:</strong> {{ observation.contenu }}</p>
+            <p><strong>Action menée:</strong> {{ observation.action_menee|default:"-" }}</p>
+            <p><strong>Suivi nécessaire:</strong> {{ observation.suivi_necessaire|yesno:"Oui,Non" }}</p>
+            <p><strong>Date de création:</strong> {{ observation.date_creation|date:"d/m/Y H:i" }}</p>
+            <a href="{% url 'responsable_classe:observation_update' observation.pk %}" class="btn btn-warning">Modifier</a>
+            <a href="{% url 'responsable_classe:observation_delete' observation.pk %}" class="btn btn-danger">Supprimer</a>
+            <a href="{% url 'responsable_classe:observation_list' %}" class="btn btn-secondary">Retour à la liste</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

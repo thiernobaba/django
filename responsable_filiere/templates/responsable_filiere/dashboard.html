@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block page_title %}Tableau de bord{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Statistiques -->
+    <div class="col-md-4 mb-4">
+        <div class="card text-white bg-primary h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title">Élèves</h5>
+                        <h2 class="mb-0">{{ total_eleves }}</h2>
+                    </div>
+                    <i class="fas fa-user-graduate fa-3x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card text-white bg-success h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title">Classes</h5>
+                        <h2 class="mb-0">{{ total_classes }}</h2>
+                    </div>
+                    <i class="fas fa-school fa-3x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card text-white bg-info h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title">Matières</h5>
+                        <h2 class="mb-0">{{ total_matieres }}</h2>
+                    </div>
+                    <i class="fas fa-book fa-3x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Répartition des élèves par classe -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Répartition des élèves par classe</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Classe</th>
+                                <th>Nombre d'élèves</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for classe in eleves_par_classe %}
+                            <tr>
+                                <td>{{ classe.niveau }}</td>
+                                <td>{{ classe.nb_eleves }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Projets à venir -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Projets à venir</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for projet in projets_a_venir %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="mb-1">{{ projet.titre }}</h6>
+                            <small class="text-muted">Échéance: {{ projet.date_limite|date:"d/m/Y" }}</small>
+                        </div>
+                        <p class="mb-1">{{ projet.description|truncatechars:50 }}</p>
+                        <small class="text-muted">{{ projet.matiere }} - {{ projet.classe }}</small>
+                    </div>
+                    {% empty %}
+                    <div class="list-group-item">
+                        <p class="mb-0 text-muted">Aucun projet à venir</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

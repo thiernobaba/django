@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block page_title %}Tableau de bord{% endblock %}
+
+{% block content %}
+    <div class="container-fluid mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-clipboard-list"></i> Gestion des notes</h2>
+            <div class="btn-group" role="group">
+                <a href="{% url 'responsable_filiere:note_create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Ajouter une note
+                </a>
+            </div>
+        </div>
+
+        <!-- Formulaire de filtrage -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Filtrer les notes</h5>
+            </div>
+            <div class="card-body">
+                <form method="get">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.classe.id_for_label }}" class="form-label">Classe</label>
+                            {{ form.classe }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.matiere.id_for_label }}" class="form-label">Matière</label>
+                            {{ form.matiere }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.date.id_for_label }}" class="form-label">Date</label>
+                            {{ form.date }}
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary">
+                        <i class="fas fa-search"></i> Filtrer
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Liste des notes -->
+        {% if notes %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Notes trouvées ({{ notes.count }})</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Élève</th>
+                                    <th>Matière</th>
+                                    <th>Note</th>
+                                    <th>Type</th>
+                                    <th>Date</th>
+                                    <th>Commentaire</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for note in notes %}
+                                    <tr>
+                                        <td>{{ note.eleve.nom }} {{ note.eleve.prenom }}</td>
+                                        <td>{{ note.matiere.nom }}</td>
+                                        <td>
+                                            <span class="badge {% if note.valeur >= 10 %}bg-success{% else %}bg-danger{% endif %}">
+                                                {{ note.valeur }}/20
+                                            </span>
+                                        </td>
+                                        <td>{{ note.get_type_evaluation_display }}</td>
+                                        <td>{{ note.date|date:"d/m/Y" }}</td>
+                                        <td>{{ note.commentaire|truncatechars:50 }}</td>
+        
+                                    </tr>                                    
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i>
+                Aucune note trouvée. Utilisez les filtres ci-dessus pour rechercher des notes ou ajoutez-en de nouvelles.
+            </div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/your-kit-id.js"></script>
+{% endblock %}

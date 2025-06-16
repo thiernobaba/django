@@ -1,0 +1,36 @@
+{% extends "eleve/base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+    <a href="{% url 'eleve:dashboard' %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left"></i> Retour au tableau de bord
+    </a>
+</div>
+    <h1 class="mb-4">{{ projet.titre }}</h1>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Détails du projet</h5>
+            <p><strong>Classe:</strong> {{ projet.classe }}</p>
+            <p><strong>Matière:</strong> {{ projet.matiere }}</p>
+            <p><strong>Type:</strong> {{ projet.get_type_projet_display }}</p>
+            <p><strong>Statut:</strong> {{ projet.get_statut_display }}</p>
+            <p><strong>Date d'attribution:</strong> {{ projet.date_attribution|date:"d/m/Y" }}</p>
+            <p><strong>Date limite:</strong> {{ projet.date_limite|date:"d/m/Y" }}</p>
+            <p><strong>Jours restants:</strong> 
+                {% if projet.jours_restants >= 0 %}
+                    {{ projet.jours_restants }} jours
+                {% else %}
+                    En retard
+                {% endif %}
+            </p>
+            <p><strong>Coefficient:</strong> {{ projet.coefficient }}</p>
+            <p><strong>Description:</strong> {{ projet.description }}</p>
+            <p><strong>Consignes:</strong> {{ projet.consignes|default:"-" }}</p>
+            {% if projet.fichier_sujet %}
+                <p><strong>Fichier sujet:</strong> <a href="{{ projet.fichier_sujet.url }}" target="_blank">Télécharger</a></p>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

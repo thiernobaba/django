@@ -1,0 +1,181 @@
+{% extends 'eleve/base.html' %}
+{% load static %}
+
+{% block title %}Mes notes{% endblock %}
+
+{% block extra_css %}
+<style>
+    .note-excellente { 
+        background-color: #d4edda; 
+        color: #155724; /* Texte foncé pour contraste */
+    }
+    .note-bonne { 
+        background-color: #cce5ff; 
+        color: #004085; /* Texte foncé pour contraste */
+    }
+    .note-moyenne { 
+        background-color: #fff3cd; 
+        color: #856404; /* Texte foncé pour contraste */
+    }
+    .note-faible { 
+        background-color: #f8d7da; 
+        color: #721c24; /* Texte foncé pour contraste */
+    }
+    .moyenne-card { border-left: 4px solid #28a745; }
+    
+    /* Assurer que les badges restent visibles */
+    .badge {
+        color: rgb(15, 14, 14) !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3">Mes notes</h1>
+    <a href="{% url 'eleve:dashboard' %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left"></i> Retour au tableau de bord
+    </a>
+</div>
+
+{% if moyenne_generale %}
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card moyenne-card">
+            <div class="card-body text-center">
+                <h3 class="text-success">{{ moyenne_generale }}/20</h3>
+                <p class="mb-0">Moyenne générale</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h3 class="text-primary">{{ notes|length }}</h3>
+                <p class="mb-0">Notes totales</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h3 class="text-info">{{ eleve.classe }}</h3>
+                <p class="mb-0">Classe</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if notes %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">
+            <i class="fas fa-graduation-cap"></i> Liste de mes notes
+        </h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="thead-light">
+                    <tr>
+                        <th><i class="fas fa-book"></i> Matière</th>
+                        <th><i class="fas fa-star"></i> Note</th>
+                        <th><i class="fas fa-tag"></i> Type</th>
+                        <th><i class="fas fa-calendar"></i> Date</th>
+                        <th><i class="fas fa-comment"></i> Commentaire</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for note in notes %}
+                    <tr class="{% if note.valeur >= 16 %}note-excellente{% elif note.valeur >= 14 %}note-bonne{% elif note.valeur >= 10 %}note-moyenne{% else %}note-faible{% endif %}">
+                        <td>
+                            <strong>{{ note.matiere.nom }}</strong>
+                            {% if note.matiere.professeur %}
+                            <br><small class="text-muted">{{ note.matiere.professeur.get_full_name }}</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="badge badge-pill {% if note.valeur >= 16 %}badge-success{% elif note.valeur >= 14 %}badge-info{% elif note.valeur >= 10 %}badge-warning{% else %}badge-danger{% endif %}">
+                                {{ note.valeur }}/20
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge badge-secondary">
+                                {{ note.get_type_evaluation_display|default:"Évaluation" }}
+                            </span>
+                        </td>
+                        <td>
+                            <i class="fas fa-calendar-alt text-muted"></i>
+                            {{ note.date|date:"d/m/Y" }}
+                        </td>
+                        <td>
+                            {% if note.commentaire %}
+                            <span class="text-muted" title="{{ note.commentaire }}">
+                                {{ note.commentaire|truncatewords:8 }}
+                            </span>
+                            {% else %}
+                            <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    {% if is_paginated %}
+    <div class="card-footer">
+        <nav aria-label="Navigation des pages">
+            <ul class="pagination justify-content-center mb-0">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">
+                            <i class="fas fa-angle-double-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                            <i class="fas fa-angle-left"></i> Précédent
+                        </a>
+                    </li>
+                {% endif %}
+                
+                <li class="page-item active">
+                    <span class="page-link">
+                        Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
+                    </span>
+                </li>
+                
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                            Suivant <i class="fas fa-angle-right"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+
+{% else %}
+<div class="card">
+    <div class="card-body text-center py-5">
+        <i class="fas fa-graduation-cap fa-5x text-muted mb-3"></i>
+        <h4 class="text-muted">Aucune note disponible</h4>
+        <p class="text-muted">Vos notes apparaîtront ici une fois qu'elles seront saisies par vos professeurs.</p>
+        <a href="{% url 'eleve:dashboard' %}" class="btn btn-primary">
+            <i class="fas fa-home"></i> Retour au tableau de bord
+        </a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

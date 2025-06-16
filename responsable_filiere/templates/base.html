@@ -1,0 +1,330 @@
+<!-- Exemple d'utilisation pour l'application Responsable Filière -->
+{% extends "base.html" %}
+
+{% block title %}Gestion Filière Analyse Statistique{% endblock %}
+
+{% block brand_name %}Filière Analyse Statistique{% endblock %}
+
+{% block dashboard_url %}{% url 'responsable_filiere:dashboard' %}{% endblock %}
+
+{% block sidebar_title %}Menu Filière AS{% endblock %}
+
+{% block navigation %}
+    <a href="{% url 'responsable_filiere:dashboard' %}" 
+       class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+        <i class="fas fa-tachometer-alt"></i> Tableau de bord
+    </a>
+    
+    <a href="{% url 'responsable_filiere:eleve_list' %}" 
+       class="nav-link {% if 'eleve' in request.resolver_match.url_name %}active{% endif %}">
+        <i class="fas fa-user-graduate"></i> Gestion des élèves
+    </a>
+    
+    <a href="{% url 'responsable_filiere:matiere_list' %}" 
+       class="nav-link {% if 'matiere' in request.resolver_match.url_name %}active{% endif %}">
+        <i class="fas fa-book"></i> Gestion des matières
+    </a>
+    
+    <a href="{% url 'responsable_filiere:note_list' %}" 
+       class="nav-link {% if 'note' in request.resolver_match.url_name %}active{% endif %}">
+        <i class="fas fa-chart-line"></i> Gestion des notes
+    </a>
+    
+    <a href="{% url 'responsable_filiere:infos_pedagogiques' %}" 
+       class="nav-link {% if request.resolver_match.url_name == 'infos_pedagogiques' %}active{% endif %}">
+        <i class="fas fa-info-circle"></i> Informations pédagogiques
+    </a>
+{% endblock %}
+
+{% block page_title %}Tableau de Bord - Filière AS{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'responsable_filiere:dashboard' %}">Accueil</a></li>
+        <li class="breadcrumb-item active">Tableau de bord</li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block page_actions %}
+<div class="d-flex gap-2">
+    <button class="btn btn-gradient">
+        <i class="fas fa-plus me-2"></i>Nouvel élève
+    </button>
+    <button class="btn btn-success-gradient">
+        <i class="fas fa-download me-2"></i>Exporter
+    </button>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Cartes statistiques -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="stat-number">156</div>
+                        <div class="stat-label">Élèves Inscrits</div>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-user-graduate fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card-success">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="stat-number">24</div>
+                        <div class="stat-label">Matières Actives</div>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-book fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card-info">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="stat-number">14.2</div>
+                        <div class="stat-label">Moyenne Générale</div>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-chart-line fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card-warning">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="stat-number">89%</div>
+                        <div class="stat-label">Taux de Réussite</div>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-trophy fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contenu principal -->
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-users me-2"></i>
+                    Élèves Récemment Inscrits
+                </h5>
+                <a href="{% url 'responsable_filiere:eleve_list' %}" class="btn btn-sm btn-gradient">
+                    Voir tout
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Classe</th>
+                                <th>Date d'inscription</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                            JD
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">Jean Dupont</h6>
+                                            <small class="text-muted">jean.dupont@email.com</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>AS-L3</td>
+                                <td>22/05/2025</td>
+                                <td><span class="badge bg-success">Actif</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                            MM
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">Marie Martin</h6>
+                                            <small class="text-muted">marie.martin@email.com</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>AS-L2</td>
+                                <td>20/05/2025</td>
+                                <td><span class="badge bg-warning">En attente</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                            PD
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">Pierre Dubois</h6>
+                                            <small class="text-muted">pierre.dubois@email.com</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>AS-L1</td>
+                                <td>18/05/2025</td>
+                                <td><span class="badge bg-success">Actif</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-pie me-2"></i>
+                    Répartition par Niveau
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="niveauChart" width="300" height="200"></canvas>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-calendar-check me-2"></i>
+                    Événements à Venir
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="flex-shrink-0">
+                        <div class="bg-primary text-white rounded p-2">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="mb-1">Examen Statistiques</h6>
+                        <small class="text-muted">30 Mai 2025 - 09:00</small>
+                    </div>
+                </div>
+                
+                <div class="d-flex align-items-center mb-3">
+                    <div class="flex-shrink-0">
+                        <div class="bg-success text-white rounded p-2">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="mb-1">Réunion Pédagogique</h6>
+                        <small class="text-muted">2 Juin 2025 - 14:00</small>
+                    </div>
+                </div>
+                
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="bg-warning text-white rounded p-2">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="mb-1">Soutenance Projets</h6>
+                        <small class="text-muted">15 Juin 2025 - 10:00</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Graphique de répartition par niveau
+    const ctx = document.getElementById('niveauChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['L1', 'L2', 'L3', 'Master'],
+            datasets: [{
+                data: [45, 52, 38, 21],
+                backgroundColor: [
+                    '#667eea',
+                    '#56ab2f',
+                    '#f093fb',
+                    '#4facfe'
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        usePointStyle: true
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

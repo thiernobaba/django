@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block page_title %}Supprimer un élève{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'responsable_filiere:dashboard' %}">Tableau de bord</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'responsable_filiere:eleve_list' %}">Élèves</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Supprimer {{ object }}</li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <h2 class="card-title">Confirmer la suppression</h2>
+        <p>Êtes-vous sûr de vouloir supprimer l'élève <strong>{{ object.nom }} {{ object.prenom }}</strong> ?</p>
+        <p class="text-danger">Cette action est irréversible et supprimera également toutes les notes et absences associées.</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="d-flex justify-content-end">
+                <a href="{% url 'responsable_filiere:eleve_detail' object.pk %}" class="btn btn-secondary me-2">
+                    Annuler
+                </a>
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Confirmer la suppression
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block page_title %}Liste des élèves{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'responsable_filiere:dashboard' %}">Tableau de bord</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Élèves</li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Liste des élèves</h2>
+            <a href="{% url 'responsable_filiere:eleve_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Ajouter un élève
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-6">
+                {{ form.classe.label_tag }}
+                {{ form.classe }}
+            </div>
+            <div class="col-md-6 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary me-2">
+                    <i class="fas fa-filter"></i> Filtrer
+                </button>
+                <a href="{% url 'responsable_filiere:eleve_list' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-times"></i> Réinitialiser
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Photo</th>
+                        <th>Numéro étudiant</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Classe</th>
+                        <th>Email</th>
+                        <th>Date d'inscription</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for eleve in eleves %}
+                    <tr>
+                        <td>
+                            {% if eleve.photo %}
+                                <img src="{{ eleve.photo.url }}" alt="Photo de {{ eleve.prenom }} {{ eleve.nom }}" 
+                                     class="rounded-circle" width="50" height="50">
+                            {% else %}
+                                <div class="no-photo bg-secondary rounded-circle d-flex align-items-center justify-content-center" 
+                                     style="width: 50px; height: 50px;">
+                                    <span class="text-white">Pas de photo</span>
+                                </div>
+                            {% endif %}
+                        </td>
+                        <td>{{ eleve.nom }}</td>
+                        <td>{{ eleve.prenom }}</td>
+                        <td>{{ eleve.classe }}</td>
+                        <td>{{ eleve.email }}</td>
+                        <td>{{ eleve.date_inscription|date:"d/m/Y" }}</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a href="{% url 'responsable_filiere:eleve_detail' eleve.pk %}" class="btn btn-sm btn-info" title="Détails">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url 'responsable_filiere:eleve_update' eleve.pk %}" class="btn btn-sm btn-warning" title="Modifier">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'responsable_filiere:eleve_delete' eleve.pk %}" class="btn btn-sm btn-danger" title="Supprimer">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                                <a href="{% url 'responsable_filiere:generer_bulletin' eleve.pk %}" class="btn btn-sm btn-success" title="Bulletin">
+                                    <i class="fas fa-file-excel"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center">Aucun élève trouvé</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

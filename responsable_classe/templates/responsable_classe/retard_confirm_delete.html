@@ -1,0 +1,13 @@
+{% extends "responsable_classe/base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Supprimer le retard</h1>
+    <p>Êtes-vous sûr de vouloir supprimer le retard de <strong>{{ object.eleve }}</strong> du {{ object.date|date:"d/m/Y" }} ?</p>
+    <p>Matière: {{ object.matiere }} | Durée: {{ object.duree_retard }} minutes</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Supprimer</button>
+        <a href="{% url 'responsable_classe:retard_list' %}" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
+{% endblock %}

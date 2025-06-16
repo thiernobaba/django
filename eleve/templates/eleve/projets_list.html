@@ -1,0 +1,191 @@
+{% extends 'eleve/base.html' %}
+{% load static %}
+{% load tz %}
+
+{% block title %}Mes projets{% endblock %}
+
+{% block extra_css %}
+<style>
+    .projet-en-retard { background-color: #f8d7da; }
+    .projet-a-temps { background-color: #d4edda; }
+    .projet-termine { background-color: #e2e3e5; }
+    .stat-card { border-left: 4px solid; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3">Mes projets</h1>
+    <a href="{% url 'eleve:dashboard' %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left"></i> Retour au tableau de bord
+    </a>
+</div>
+
+<!-- Statistiques des projets -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card stat-card" style="border-left-color: #17a2b8;">
+            <div class="card-body text-center">
+                <h3 class="text-info">{{ projets|length|default:0 }}</h3>
+                <p class="mb-0">Total des projets</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card" style="border-left-color: #28a745;"> 
+            <div class="card-body text-center">
+                <h3 class="text-success">{{ projets_a_temps|default:0 }}</h3>
+                <p class="mb-0">Projets à temps</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card" style="border-left-color: #dc3545;">
+            <div class="card-body text-center">
+                <h3 class="text-danger">{{ projets_en_retard|default:0 }}</h3>
+                <p class="mb-0">Projets en retard</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if projets %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">
+            <i class="fas fa-project-diagram"></i> Liste de mes projets
+        </h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="thead-light">
+                    <tr>
+                        <th><i class="fas fa-heading"></i> Titre</th>
+                        <th><i class="fas fa-book"></i> Matière</th>
+                        <th><i class="fas fa-calendar-day"></i> Date limite</th>
+                        <th><i class="fas fa-hourglass-half"></i> Jours restants</th>
+                        <th><i class="fas fa-tasks"></i> Statut</th>
+                        <th> <i class="fas fa-cog"></i>Fichier du projet</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for projet in projets %}
+                    <tr class="{% if projet.date_limite < today %}projet-en-retard{% else %}projet-a-temps{% endif %}">
+                        <td>
+                            <strong>{{ projet.titre }}</strong>
+                            {% if projet.description %}
+                            <br><small class="text-muted">{{ projet.description|truncatewords:5 }}</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if projet.matiere %}
+                                {{ projet.matiere.nom }}
+                            {% else %}
+                                <span class="text-muted">Non spécifié</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ projet.date_limite|date:"d/m/Y" }}
+                            <br><small class="text-muted">{{ projet.date_limite|date:"l" }}</small>
+                        </td>
+                        <td>
+                            {% if projet.date_limite < today %}
+                                <span class="text-danger">En retard</span>
+                            {% else %}
+                                {{ projet.date_limite|timeuntil }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if projet.statut == 'TERMINE' %}
+                                <span class="badge badge-secondary">
+                                    <i class="fas fa-check-circle"></i> Terminé
+                                </span>
+                            {% elif projet.date_limite < today %}
+                                <span class="badge badge-danger">
+                                    <i class="fas fa-exclamation-circle"></i> En retard
+                                </span>
+                            {% else %}
+                                <span class="badge badge-success">
+                                    <i class="fas fa-clock"></i> En cours
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                           {% if projet.fichier_sujet %}
+                                <a href="{{ projet.fichier_sujet.url }}" class="btn btn-sm btn-primary" target="_blank">
+                                    <i class="fas fa-download"></i> Télécharger
+                                </a>
+                            {% else %}
+                                <span class="text-muted">Aucun fichier</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    {% if is_paginated %}
+    <div class="card-footer">
+        <nav aria-label="Navigation des pages">
+            <ul class="pagination justify-content-center mb-0">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">
+                            <i class="fas fa-angle-double-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                            <i class="fas fa-angle-left"></i> Précédent
+                        </a>
+                    </li>
+                {% endif %}
+                
+                <li class="page-item active">
+                    <span class="page-link">
+                        Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
+                    </span>
+                </li>
+                
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                            Suivant <i class="fas fa-angle-right"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
+</div>
+
+{% if projets_en_retard > 0 %}
+<div class="alert alert-danger mt-4">
+    <i class="fas fa-exclamation-triangle"></i>
+    <strong>Attention !</strong> Vous avez {{ projets_en_retard }} projet{{ projets_en_retard|pluralize }} en retard.
+    Pensez à les terminer au plus vite.
+</div>
+{% endif %}
+
+{% else %}
+<div class="card">
+    <div class="card-body text-center py-5">
+        <i class="fas fa-check-circle fa-5x text-success mb-3"></i>
+        <h4 class="text-success">Aucun projet en cours</h4>
+        <p class="text-muted">Vous n'avez actuellement aucun projet à réaliser.</p>
+        <a href="{% url 'eleve:dashboard' %}" class="btn btn-success">
+            <i class="fas fa-home"></i> Retour au tableau de bord
+        </a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "responsable_classe/base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">{% if form.instance.pk %}Modifier l'observation{% else %}Créer une observation{% endif %}</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row">
+            {% for field in form %}
+                <div class="col-md-6 mb-3">
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="text-danger">
+                            {% for error in field.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+        <a href="{% url 'responsable_classe:observation_list' %}" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
+{% endblock %}

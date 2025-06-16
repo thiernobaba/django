@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block page_title %}Informations pédagogiques{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'responsable_filiere:dashboard' %}">Tableau de bord</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Informations pédagogiques</li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="card-body">
+        <h2 class="card-title">Informations pédagogiques</h2>
+        
+        <form method="get" class="row g-3">
+            <div class="col-md-6">
+                {{ form.classe.label_tag }}
+                {{ form.classe }}
+            </div>
+            <div class="col-md-6 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary me-2">
+                    <i class="fas fa-filter"></i> Filtrer
+                </button>
+                <a href="{% url 'responsable_filiere:infos_pedagogiques' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-times"></i> Réinitialiser
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Cahiers de texte -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Derniers cahiers de texte</h5>
+                    <a href="#" class="btn btn-sm btn-outline-primary">Voir tout</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for cahier in cahiers %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="mb-1">{{ cahier.matiere }} - {{ cahier.classe }}</h6>
+                            <small class="text-muted">{{ cahier.date|date:"d/m/Y" }}</small>
+                        </div>
+                        <p class="mb-1">{{ cahier.contenu|truncatechars:80 }}</p>
+                    </div>
+                    {% empty %}
+                    <div class="list-group-item">
+                        <p class="mb-0 text-muted">Aucun cahier de texte récent</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Absences -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Dernières absences</h5>
+                    <a href="#" class="btn btn-sm btn-outline-primary">Voir tout</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for absence in absences %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="mb-1">{{ absence.eleve }}</h6>
+                            <small class="text-muted">{{ absence.date|date:"d/m/Y" }}</small>
+                        </div>
+                        <p class="mb-1">
+                            Statut: 
+                            {% if absence.justifiee %}
+                            <span class="badge bg-success">Justifiée</span>
+                            {% else %}
+                            <span class="badge bg-danger">Non justifiée</span>
+                            {% endif %}
+                        </p>
+                        <small class="text-muted">Motif: {{ absence.motif|default:"Non renseigné"|truncatechars:30 }}</small>
+                    </div>
+                    {% empty %}
+                    <div class="list-group-item">
+                        <p class="mb-0 text-muted">Aucune absence récente</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Projets -->
+<div class="card">
+    <div class="card-header bg-white">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Projets et devoirs</h5>
+            <a href="#" class="btn btn-sm btn-outline-primary">Voir tout</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Titre</th>
+                        <th>Matière</th>
+                        <th>Classe</th>
+                        <th>Date attribution</th>
+                        <th>Date limite</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for projet in projets %}
+                    <tr>
+                        <td>{{ projet.titre }}</td>
+                        <td>{{ projet.matiere }}</td>
+                        <td>{{ projet.classe }}</td>
+                        <td>{{ projet.date_attribution|date:"d/m/Y" }}</td>
+                        <td>{{ projet.date_limite|date:"d/m/Y" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center">Aucun projet ou devoir à afficher</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

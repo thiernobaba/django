@@ -1,0 +1,192 @@
+<!-- Exemple d'utilisation pour l'application Responsable de Classe -->
+{% extends "base.html" %}
+
+{% block title %}Responsable de Classe - Dashboard{% endblock %}
+
+{% block brand_name %}Responsable de Classe{% endblock %}
+
+{% block dashboard_url %}{% url 'responsable_classe:dashboard' %}{% endblock %}
+
+{% block sidebar_title %}Menu Principal{% endblock %}
+
+{% block navigation %}
+    <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" 
+       href="{% url 'responsable_classe:dashboard' %}">
+        <i class="fas fa-home"></i> Tableau de bord
+    </a>
+    
+    <a class="nav-link {% if 'cahier_texte' in request.resolver_match.url_name %}active{% endif %}" 
+       href="{% url 'responsable_classe:cahier_texte_list' %}">
+        <i class="fas fa-book"></i> Cahier de texte
+    </a>
+    
+    <a class="nav-link {% if 'absence' in request.resolver_match.url_name %}active{% endif %}" 
+       href="{% url 'responsable_classe:absence_list' %}">
+        <i class="fas fa-user-times"></i> Absences
+    </a>
+    
+    <a class="nav-link {% if 'projet' in request.resolver_match.url_name %}active{% endif %}" 
+       href="{% url 'responsable_classe:projet_list' %}">
+        <i class="fas fa-tasks"></i> Projets
+    </a>
+    
+    <a class="nav-link {% if 'retard' in request.resolver_match.url_name %}active{% endif %}" 
+       href="{% url 'responsable_classe:retard_list' %}">
+        <i class="fas fa-clock"></i> Retards
+    </a>
+    
+    <a class="nav-link {% if 'observation' in request.resolver_match.url_name %}active{% endif %}" 
+       href="{% url 'responsable_classe:observation_list' %}">
+        <i class="fas fa-eye"></i> Observations
+    </a>
+    
+    <a class="nav-link {% if 'statistiques' in request.resolver_match.url_name %}active{% endif %}" 
+       href="{% url 'responsable_classe:statistiques' %}">
+        <i class="fas fa-chart-bar"></i> Statistiques
+    </a>
+{% endblock %}
+
+{% block page_title %}Tableau de Bord{% endblock %}
+
+{% block content %}
+<!-- Cartes statistiques -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="stat-number">28</div>
+                        <div class="stat-label">Élèves Total</div>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-users fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card-warning">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="stat-number">5</div>
+                        <div class="stat-label">Absences Aujourd'hui</div>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-user-times fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card-info">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Projets en Cours</div>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-tasks fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stat-card-success">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <div class="stat-number">92%</div>
+                        <div class="stat-label">Taux de Présence</div>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-chart-line fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contenu principal -->
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-calendar-alt me-2"></i>
+                    Activités Récentes
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Activité</th>
+                                <th>Élève</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>25/05/2025</td>
+                                <td>Absence signalée</td>
+                                <td>Jean Dupont</td>
+                                <td><span class="badge bg-warning">En attente</span></td>
+                            </tr>
+                            <tr>
+                                <td>25/05/2025</td>
+                                <td>Projet rendu</td>
+                                <td>Marie Martin</td>
+                                <td><span class="badge bg-success">Validé</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-bell me-2"></i>
+                    Notifications
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-exclamation-circle text-warning fa-lg"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="mb-1">Retard signalé</h6>
+                        <small class="text-muted">Pierre Dubois - 10:15</small>
+                    </div>
+                </div>
+                
+                <div class="d-flex align-items-center mb-3">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-check-circle text-success fa-lg"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h6 class="mb-1">Projet validé</h6>
+                        <small class="text-muted">Sophie Leroy - Hier</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

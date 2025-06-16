@@ -1,0 +1,82 @@
+{% extends 'responsable_classe/base.html' %}
+{% load static %}
+
+{% block title %}{{ cahier.titre }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-book-open"></i> {{ cahier.titre }}</h2>
+        <div>
+            <a href="{% url 'responsable_classe:cahier_texte_update' cahier.pk %}" 
+               class="btn btn-warning">
+                <i class="fas fa-edit"></i> Modifier
+            </a>
+            <a href="{% url 'responsable_classe:cahier_texte_list' %}" 
+               class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Détails de la séance</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>Date :</strong></div>
+                        <div class="col-sm-9">{{ cahier.date|date:"l d F Y" }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>Classe :</strong></div>
+                        <div class="col-sm-9">
+                            <span class="badge bg-primary">{{ cahier.classe }}</span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>Matière :</strong></div>
+                        <div class="col-sm-9">{{ cahier.matiere }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>Contenu :</strong></div>
+                        <div class="col-sm-9">
+                            <div class="border rounded p-3 bg-light">
+                                {{ cahier.contenu|linebreaks }}
+                            </div>
+                        </div>
+                    </div>
+                    {% if cahier.travail_a_faire %}
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>Travail à faire :</strong></div>
+                        <div class="col-sm-9">
+                            <div class="alert alert-info">
+                                {{ cahier.travail_a_faire|linebreaks }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">Informations</h6>
+                </div>
+                <div class="card-body">
+                    <small class="text-muted">
+                        <div><i class="fas fa-calendar-plus"></i> Créé le {{ cahier.date_creation|date:"d/m/Y à H:i" }}</div>
+                        {% if cahier.date_modification != cahier.date_creation %}
+                        <div><i class="fas fa-calendar-edit"></i> Modifié le {{ cahier.date_modification|date:"d/m/Y à H:i" }}</div>
+                        {% endif %}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

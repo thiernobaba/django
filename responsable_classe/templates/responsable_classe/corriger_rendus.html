@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Corriger les rendus - {{ projet.titre }}</h1>
+    <p>Classe: {{ projet.classe }} | Matière: {{ projet.matiere }} | Date limite: {{ projet.date_limite|date:"d/m/Y" }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Élève</th>
+                    <th>Date de rendu</th>
+                    <th>Fichier</th>
+                    <th>Commentaire élève</th>
+                    <th>Note (/20)</th>
+                    <th>Commentaire professeur</th>
+                    <th>Retard</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rendu in rendus %}
+                <tr>
+                    <td>{{ rendu.eleve }}</td>
+                    <td>{{ rendu.date_rendu|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        {% if rendu.fichier_rendu %}
+                            <a href="{{ rendu.fichier_rendu.url }}" target="_blank">Télécharger</a>
+                        {% else %}
+                            Aucun fichier
+                        {% endif %}
+                    </td>
+                    <td>{{ rendu.commentaire_eleve|default:"-" }}</td>
+                    <td>
+                        <input type="number" name="note_{{ rendu.id }}" value="{{ rendu.note|default_if_none:'' }}" 
+                               min="0" max="20" step="0.01" class="form-control" style="width: 100px;">
+                    </td>
+                    <td>
+                        <textarea name="commentaire_{{ rendu.id }}" class="form-control" rows="3">{{ rendu.commentaire_professeur|default:"" }}</textarea>
+                    </td>
+                    <td>
+                        {% if rendu.est_en_retard %}
+                            Oui
+                        {% else %}
+                            Non
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center">Aucun rendu pour ce projet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if rendus %}
+            <button type="submit" class="btn btn-primary">Enregistrer les corrections</button>
+        {% endif %}
+        <a href="{% url 'responsable_classe:projet_detail' projet.pk %}" class="btn btn-secondary">Retour</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+<!-- ===== TEMPLATE 1: note_multiple_form.html ===== -->
+<!-- responsable_filiere/templates/responsable_filiere/note_multiple_form.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saisie de notes par classe</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">
+                            <i class="fas fa-edit"></i> Saisie de notes par classe
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.classe.id_for_label }}" class="form-label">Classe</label>
+                                    {{ form.classe }}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.matiere.id_for_label }}" class="form-label">Matière</label>
+                                    {{ form.matiere }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.date.id_for_label }}" class="form-label">Date</label>
+                                    {{ form.date }}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.type_evaluation.id_for_label }}" class="form-label">Type d'évaluation</label>
+                                    {{ form.type_evaluation }}
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <a href="{% url 'responsable_filiere:note_list' %}" class="btn btn-secondary me-md-2">
+                                    <i class="fas fa-arrow-left"></i> Retour
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-arrow-right"></i> Continuer
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/your-kit-id.js"></script>
+</body>
+</html>

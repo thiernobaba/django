@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block page_title %}
+    {% if object %}Modifier {{ object }}{% else %}Ajouter un élève{% endif %}
+{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'responsable_filiere:dashboard' %}">Tableau de bord</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'responsable_filiere:eleve_list' %}">Élèves</a></li>
+        <li class="breadcrumb-item active" aria-current="page">
+            {% if object %}Modifier {{ object }}{% else %}Ajouter un élève{% endif %}
+        </li>
+    </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="{{ form.nom.id_for_label }}" class="form-label">Nom</label>
+                    {{ form.nom }}
+                    {% if form.nom.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.nom.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.prenom.id_for_label }}" class="form-label">Prénom</label>
+                    {{ form.prenom }}
+                    {% if form.prenom.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.prenom.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="{{ form.date_naissance.id_for_label }}" class="form-label">Date de naissance</label>
+                    {{ form.date_naissance }}
+                    {% if form.date_naissance.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.date_naissance.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.sexe.id_for_label }}" class="form-label">Sexe</label>
+                    {{ form.sexe }}
+                    {% if form.sexe.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.sexe.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.email.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.telephone.id_for_label }}" class="form-label">Téléphone</label>
+                    {{ form.telephone }}
+                    {% if form.telephone.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.telephone.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="{{ form.adresse.id_for_label }}" class="form-label">Adresse</label>
+                {{ form.adresse }}
+                {% if form.adresse.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.adresse.errors }}
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="{{ form.classe.id_for_label }}" class="form-label">Classe</label>
+                    {{ form.classe }}
+                    {% if form.classe.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.classe.errors }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <label for="{{ form.photo.id_for_label }}" class="form-label">Photo</label>
+                    {{ form.photo }}
+                    {% if form.photo.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.photo.errors }}
+                    </div>
+                    {% endif %}
+                    {% if object.photo %}
+                    <div class="mt-2">
+                        <img src="{{ object.photo.url }}" alt="Photo actuelle" style="max-height: 100px;">
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-end">
+                <a href="{% if object %}{% url 'responsable_filiere:eleve_detail' object.pk %}{% else %}{% url 'responsable_filiere:eleve_list' %}{% endif %}" class="btn btn-secondary me-2">
+                    Annuler
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    {% if object %}Mettre à jour{% else %}Ajouter{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

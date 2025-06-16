@@ -1,0 +1,206 @@
+{% extends 'eleve/base.html' %}
+{% load static %}
+
+{% block title %}Tableau de bord - {{ eleve.nom|default:"Élève" }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .stat-card {
+        border-left: 4px solid #007bff;
+        transition: transform 0.2s;
+    }
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .notification-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% if error %}
+<div class="alert alert-danger">
+    <i class="fas fa-exclamation-triangle"></i> {{ error }}
+    <a href="{% url 'eleve:dashboard' %}" class="btn btn-sm btn-outline-danger ml-2">Actualiser</a>
+</div>
+{% endif %}
+
+{% if eleve %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3">Bonjour {{ eleve.prenom }} !</h1>
+</div>
+
+<!-- Statistiques rapides -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card text-center">
+            <div class="card-body">
+                <i class="fas fa-graduation-cap fa-2x text-primary mb-2"></i>
+                <h5>{{ dernieres_notes|length }}</h5>
+                <small class="text-muted">Notes récentes</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card text-center">
+            <div class="card-body">
+                <i class="fas fa-tasks fa-2x text-success mb-2"></i>
+                <h5>{{ projets_en_cours|length }}</h5>
+                <small class="text-muted">Projets en cours</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card text-center">
+            <div class="card-body">
+                <i class="fas fa-calendar-times fa-2x text-warning mb-2"></i>
+                <h5>{{ dernieres_absences|length }}</h5>
+                <small class="text-muted">Absences récentes</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card text-center">
+            <div class="card-body">
+                <i class="fas fa-book fa-2x text-info mb-2"></i>
+                <h5>{{ derniers_cahiers|length }}</h5>
+                <small class="text-muted">Cahiers récents</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contenu principal -->
+<div class="row">
+    <!-- Mon profil -->
+    <div class="col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-user"></i> Mon profil</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Nom :</strong> {{ eleve.nom }}</p>
+                <p><strong>Prénom :</strong> {{ eleve.prenom }}</p>
+                <p><strong>Classe :</strong> {{ eleve.classe }}</p>
+                <p><strong>N° étudiant :</strong> {{ eleve.numero_etudiant }}</p>
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'eleve:eleve_detail' %}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-eye"></i> Voir mon profil complet
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mes dernières notes -->
+    <div class="col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-graduation-cap"></i> Mes dernières notes</h5>
+            </div>
+            <div class="card-body">
+                {% if dernieres_notes %}
+                <div class="list-group list-group-flush">
+                    {% for note in dernieres_notes %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center p-2">
+                        <div>
+                            <strong>{{ note.matiere.nom }}</strong><br>
+                            <small class="text-muted">{{ note.date }}</small>
+                        </div>
+                        <span class="badge badge-primary badge-pill">{{ note.valeur }}/20</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted">Aucune note disponible</p>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'eleve:note_list' %}" class="btn btn-success btn-sm">
+                    <i class="fas fa-list"></i> Voir toutes mes notes
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mes projets en cours -->
+    <div class="col-lg-4 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-warning text-white">
+                <h5 class="mb-0"><i class="fas fa-tasks"></i> Mes projets en cours</h5>
+            </div>
+            <div class="card-body">
+                {% if projets_en_cours %}
+                <div class="list-group list-group-flush">
+                    {% for projet in projets_en_cours %}
+                    <div class="list-group-item p-2">
+                        <div class="d-flex justify-content-between">
+                            <strong>{{ projet.titre }}</strong>
+                            <small class="text-muted">{{ projet.matiere.nom }}</small>
+                        </div>
+                        <small class="text-danger">
+                            <i class="fas fa-clock"></i> Échéance : {{ projet.date_limite }}
+                        </small>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted">Aucun projet en cours</p>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'eleve:projet_list' %}" class="btn btn-warning btn-sm">
+                    <i class="fas fa-list"></i> Voir tous les projets
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Derniers cahiers de texte -->
+    <div class="col-lg-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-book"></i> Derniers cahiers de texte</h5>
+            </div>
+            <div class="card-body">
+                {% if derniers_cahiers %}
+                <div class="list-group list-group-flush">
+                    {% for cahier in derniers_cahiers %}
+                    <div class="list-group-item p-2">
+                        <div class="d-flex justify-content-between">
+                            <strong>{{ cahier.matiere.nom }}</strong>
+                            <small class="text-muted">{{ cahier.date }}</small>
+                        </div>
+                        <p class="mb-1 small">{{ cahier.contenu|truncatewords:15 }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted">Aucun cahier de texte disponible</p>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'eleve:cahier_texte_list' %}" class="btn btn-info btn-sm">
+                    <i class="fas fa-book-open"></i> Voir tous les cahiers
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% else %}
+<div class="text-center py-5">
+    <i class="fas fa-user-times fa-5x text-muted mb-3"></i>
+    <h3 class="text-muted">Profil non trouvé</h3>
+    <p class="text-muted">Votre profil élève n'a pas pu être chargé.</p>
+    <a href="{% url 'eleve:dashboard' %}" class="btn btn-primary">Réessayer</a>
+</div>
+{% endif %}
+{% endblock %}

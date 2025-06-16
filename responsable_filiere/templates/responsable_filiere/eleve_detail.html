@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+
+{% block page_title %}Détails de l'élève{% endblock %}
+
+{% block breadcrumb %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'responsable_filiere:dashboard' %}">Tableau de bord</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'responsable_filiere:eleve_list' %}">Élèves</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ eleve.nom }} {{ eleve.prenom }}</li>
+    </ol>   
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body text-center">
+                {% if eleve.photo and eleve.photo.url %}
+                    <img src="{{ eleve.photo.url }}" alt="Photo de {{ eleve.prenom }} {{ eleve.nom }}" 
+                         class="img-fluid rounded-circle mb-3" 
+                         style="width: 150px; height: 150px; object-fit: cover;">
+                {% else %}
+                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mb-3" 
+                         style="width: 150px; height: 150px; margin: 0 auto;">
+                        <i class="fas fa-user fa-4x text-secondary"></i>
+                    </div>
+                {% endif %}
+                
+                <h3>{{ eleve.nom }} {{ eleve.prenom }}</h3>
+                <p class="text-muted">{{ eleve.classe }}</p>
+                
+                <div class="d-flex justify-content-center mb-3">
+                    <a href="{% url 'responsable_filiere:eleve_update' eleve.pk %}" class="btn btn-warning me-2">
+                        <i class="fas fa-edit"></i> Modifier
+                    </a>
+                    <a href="{% url 'responsable_filiere:generer_bulletin' eleve.pk %}" class="btn btn-success">
+                        <i class="fas fa-file-excel"></i> Bulletin
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">Informations personnelles</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>Date de naissance</span>
+                        <span>{{ eleve.date_naissance|date:"d/m/Y" }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>Sexe</span>
+                        <span>{{ eleve.get_sexe_display }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>Email</span>
+                        <span>{{ eleve.email }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>Téléphone</span>
+                        <span>{{ eleve.telephone|default:"Non renseigné" }}</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Adresse</span>
+                        <p class="mb-0">{{ eleve.adresse|default:"Non renseignée"|linebreaks }}</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Notes</h5>
+                    <span class="badge bg-primary">Moyenne générale: {{ moyenne_generale|floatformat:2 }}/20</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Matière</th>
+                                <th>Note</th>
+                                <th>Type</th>
+                                <th>Date</th>
+                                <th>Commentaire</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for note in notes %}
+                            <tr>
+                                <td>{{ note.matiere }}</td>
+                                <td>{{ note.valeur }}/20</td>
+                                <td>{{ note.get_type_evaluation_display }}</td>
+                                <td>{{ note.date|date:"d/m/Y" }}</td>
+                                <td>{{ note.commentaire|default:"-"|truncatechars:30 }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">Aucune note enregistrée</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Absences</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Statut</th>
+                                <th>Motif</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for absence in absences %}
+                            <tr>
+                                <td>{{ absence.date|date:"d/m/Y" }}</td>
+                                <td>
+                                    {% if absence.justifiee %}
+                                    <span class="badge bg-success">Justifiée</span>
+                                    {% else %}
+                                    <span class="badge bg-danger">Non justifiée</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ absence.motif|default:"Non renseigné"|truncatechars:30 }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center">Aucune absence enregistrée</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Retards</h5>
+                    <span class="badge bg-primary">Total: {{ retards.count }}</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th> Heure prévue</th>
+                                <th> Heure arrivée</th>
+                                <th>Matière</th>
+                                <th>Statut</th>
+                                <th>Motif</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for retard in retards %}
+                            <tr>
+                                <td>{{ retard.date|date:"d/m/Y" }}</td>
+                                <td>{{ retard.heure_prevue|time:"H:i" }}</td>
+                                <td>{{ retard.heure_arrivee|time:"H:i" }}</td>
+                                <td>{{ retard.matiere.nom|default:"-" }}</td>
+                                <td>
+                                    <span class="badge bg-{% if retard.justifie %}success{% else %}warning{% endif %}">
+                                        {{ retard.justifie|yesno:"Justifié,Non justifié" }}
+                                    </span>
+                                </td>
+                                <td>{{ retard.motif|default:"Non renseigné"|truncatechars:30 }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center">Aucun retard enregistré</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'eleve/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <a href="{% url 'eleve:dashboard' %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left"></i> Retour au tableau de bord
+    </a>
+</div>
+<h1>Mon profil</h1>
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3">
+                {% if eleve.photo %}
+                <img src="{{ eleve.photo.url }}" class="img-fluid" alt="Photo de profil">
+                {% endif %}
+            </div>
+            <div class="col-md-9">
+                <p><strong>Nom:</strong> {{ eleve.nom }}</p>
+                <p><strong>Prénom:</strong> {{ eleve.prenom }}</p>
+                <p><strong>Numéro étudiant:</strong> {{ eleve.numero_etudiant }}</p>
+                <p><strong>Date de naissance:</strong> {{ eleve.date_naissance }}</p>
+                <p><strong>Classe:</strong> {{ eleve.classe }}</p>
+                <p><strong>Email:</strong> {{ eleve.email }}</p>
+                <p><strong>Téléphone:</strong> {{ eleve.telephone }}</p>
+                <p><strong>Adresse:</strong> {{ eleve.adresse }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

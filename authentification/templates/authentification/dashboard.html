@@ -1,0 +1,127 @@
+{% extends 'authentification/base.html' %}
+
+{% block title %}Tableau de bord - {{ user_type_display }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-12">
+        <div class="card shadow-lg">
+            <div class="card-header bg-gradient text-white py-4" style="background: linear-gradient(45deg, #28a745, #20c997);">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h3 class="mb-0">
+                            <i class="fas fa-tachometer-alt"></i> Tableau de bord
+                        </h3>
+                        <p class="mb-0 opacity-75">{{ user_type_display }}</p>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-user-circle fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="row">
+                            <div class="col-12 mb-4">
+                                <h4 class="text-primary">
+                                    <i class="fas fa-hand-wave text-warning"></i> 
+                                    Bienvenue, {{ user.first_name }} {{ user.last_name }}
+                                </h4>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="bg-light p-3 rounded">
+                                    <strong><i class="fas fa-user-tag text-primary"></i> Type de compte :</strong><br>
+                                    <span class="badge bg-primary fs-6">{{ user_type_display }}</span>
+                                </div>
+                            </div>
+                            {% if user.classe %}
+                            <div class="col-md-6 mb-3">
+                                <div class="bg-light p-3 rounded">
+                                    <strong><i class="fas fa-school text-success"></i> Classe :</strong><br>
+                                    <span class="badge bg-success fs-6">{{ user.classe }}</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if user.numero_etudiant %}
+                            <div class="col-md-6 mb-3">
+                                <div class="bg-light p-3 rounded">
+                                    <strong><i class="fas fa-id-card text-info"></i> Numéro étudiant :</strong><br>
+                                    <span class="badge bg-info fs-6">{{ user.numero_etudiant }}</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                            <div class="col-md-6 mb-3">
+                                <div class="bg-light p-3 rounded">
+                                    <strong><i class="fas fa-envelope text-warning"></i> Email :</strong><br>
+                                    <span class="text-muted">{{ user.email }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <div class="text-center">
+                            <div class="mb-4">
+                                <a href="{{ redirect_url }}" class="btn btn-primary btn-lg px-4 py-3 shadow">
+                                    <i class="fas fa-arrow-right"></i><br>
+                                    <small>Accéder à</small><br>
+                                    <strong>{{ app_name }}</strong>
+                                </a>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'profile' %}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-user-edit"></i> Modifier le profil
+                                </a>
+                                <a href="{% url 'logout' %}" class="btn btn-outline-danger">
+                                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <hr class="my-4">
+                
+                <div class="row mt-4">
+                    <div class="col-md-4 mb-3">
+                        <div class="card border-primary h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                                <h6 class="card-title">Informations</h6>
+                                <p class="card-text small text-muted">Consultez et modifiez vos informations personnelles</p>
+                                <a href="{% url 'profile' %}" class="btn btn-outline-primary btn-sm">Voir</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card border-success h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-bell fa-3x text-success mb-3"></i>
+                                <h6 class="card-title">Notifications</h6>
+                                <p class="card-text small text-muted">
+                                    <span class="badge bg-success">0</span> nouvelle notification
+                                </p>
+                                <button class="btn btn-outline-success btn-sm" disabled>Voir tout</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card border-warning h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-calendar fa-3x text-warning mb-3"></i>
+                                <h6 class="card-title">Agenda</h6>
+                                <p class="card-text small text-muted">Consultez votre planning et vos échéances</p>
+                                <button class="btn btn-outline-warning btn-sm" disabled>Consulter</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

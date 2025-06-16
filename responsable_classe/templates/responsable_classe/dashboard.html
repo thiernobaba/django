@@ -1,0 +1,252 @@
+{% extends 'responsable_classe/base.html' %}
+
+{% block title %}Tableau de bord - Responsable de Classe{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container-fluid">
+        <h1 class="mb-0">
+            <i class="fas fa-tachometer-alt me-3"></i>
+            Tableau de bord
+        </h1>
+        <p class="lead mb-0">Vue d'ensemble de l'activité de vos classes</p>
+    </div>
+</div>
+
+<!-- Statistiques principales -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card">
+            <div class="card-body text-center">
+                <i class="fas fa-book fa-2x mb-3"></i>
+                <h3 class="mb-1">{{ total_cahiers }}</h3>
+                <p class="mb-0">Cahiers de texte</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card-warning">
+            <div class="card-body text-center">
+                <i class="fas fa-user-times fa-2x mb-3"></i>
+                <h3 class="mb-1">{{ absences_non_justifiees }}</h3>
+                <p class="mb-0">Absences non justifiées</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card-success">
+            <div class="card-body text-center">
+                <i class="fas fa-tasks fa-2x mb-3"></i>
+                <h3 class="mb-1">{{ projets_en_cours }}</h3>
+                <p class="mb-0">Projets en cours</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-3">
+        <div class="card stat-card-info">
+            <div class="card-body text-center">
+                <i class="fas fa-clock fa-2x mb-3"></i>
+                <h3 class="mb-1">{{ retards_aujourd_hui }}</h3>
+                <p class="mb-0">Retards aujourd'hui</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Projets urgents -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-warning text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Projets à échéance proche
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if projets_urgents %}
+                    <div class="list-group list-group-flush">
+                        {% for projet in projets_urgents %}
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">{{ projet.titre }}</h6>
+                                    <small class="text-muted">{{ projet.classe }} - {{ projet.matiere }}</small>
+                                </div>
+                                <span class="badge bg-warning rounded-pill">
+                                    {% if projet.jours_restants == 0 %}
+                                        Aujourd'hui
+                                    {% elif projet.jours_restants == 1 %}
+                                        Demain
+                                    {% else %}
+                                        {{ projet.jours_restants }} jours
+                                    {% endif %}
+                                </span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="text-center mt-3">
+                        <a href="{% url 'responsable_classe:projet_list' %}" class="btn btn-gradient">
+                            Voir tous les projets
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-check-circle fa-3x mb-3"></i>
+                        <p>Aucun projet urgent pour le moment</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Dernières observations -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-eye me-2"></i>
+                    Dernières observations
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if dernieres_observations %}
+                    <div class="list-group list-group-flush">
+                        {% for observation in dernieres_observations %}
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="mb-1">{{ observation.titre }}</h6>
+                                        <p class="mb-1">{{ observation.eleve }}</p>
+                                        <small class="text-muted">{{ observation.date }}</small>
+                                    </div>
+                                    <span class="badge badge-custom
+                                        {% if observation.type_observation == 'POSITIVE' %}bg-success
+                                        {% elif observation.type_observation == 'NEGATIVE' %}bg-danger
+                                        {% elif observation.type_observation == 'DISCIPLINAIRE' %}bg-warning
+                                        {% else %}bg-secondary{% endif %}">
+                                        {{ observation.get_type_observation_display }}
+                                    </span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="text-center mt-3">
+                        <a href="{% url 'responsable_classe:observation_list' %}" class="btn btn-gradient">
+                            Voir toutes les observations
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-clipboard fa-3x mb-3"></i>
+                        <p>Aucune observation récente</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Absences récentes non justifiées -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-user-times me-2"></i>
+                    Absences récentes non justifiées
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if absences_recentes %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Élève</th>
+                                    <th>Date</th>
+                                    <th>Matière</th>
+                                    <th>Durée</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for absence in absences_recentes %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ absence.eleve }}</strong>
+                                        </td>
+                                        <td>{{ absence.date }}</td>
+                                        <td>{{ absence.matiere }}</td>
+                                        <td>{{ absence.duree_minutes }} min</td>
+                                        <td>
+                                            <a href="{% url 'responsable_classe:absence_update' absence.pk %}" 
+                                               class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-edit"></i> Modifier
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center mt-3">
+                        <a href="{% url 'responsable_classe:absence_list' %}" class="btn btn-gradient">
+                            Voir toutes les absences
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-check-circle fa-3x mb-3 text-success"></i>
+                        <p>Aucune absence non justifiée récente</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Actions rapides -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-bolt me-2"></i>
+                    Actions rapides
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-2">
+                        <a href="{% url 'responsable_classe:absence_create' %}" class="btn btn-gradient w-100">
+                            <i class="fas fa-user-times me-2"></i>
+                            Marquer une absence
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{% url 'responsable_classe:retard_create' %}" class="btn btn-gradient w-100">
+                            <i class="fas fa-clock me-2"></i>
+                            Enregistrer un retard
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{% url 'responsable_classe:observation_create' %}" class="btn btn-gradient w-100">
+                            <i class="fas fa-eye me-2"></i>
+                            Créer une observation
+                        </a>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <a href="{% url 'responsable_classe:cahier_texte_create' %}" class="btn btn-gradient w-100">
+                            <i class="fas fa-book me-2"></i>
+                            Nouveau cahier de texte
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

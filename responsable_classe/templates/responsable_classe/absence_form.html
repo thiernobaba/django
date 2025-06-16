@@ -1,0 +1,138 @@
+{% extends 'responsable_classe/base.html' %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-user-times"></i> {{ title }}</h2>
+        <a href="{% url 'responsable_classe:absence_list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Retour
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.eleve.id_for_label }}" class="form-label">
+                                    {{ form.eleve.label }} *
+                                </label>
+                                {{ form.eleve }}
+                                {% if form.eleve.errors %}
+                                    <div class="text-danger small">{{ form.eleve.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.matiere.id_for_label }}" class="form-label">
+                                    {{ form.matiere.label }} *
+                                </label>
+                                {{ form.matiere }}
+                                {% if form.matiere.errors %}
+                                    <div class="text-danger small">{{ form.matiere.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.date.id_for_label }}" class="form-label">
+                                    {{ form.date.label }} *
+                                </label>
+                                {{ form.date }}
+                                {% if form.date.errors %}
+                                    <div class="text-danger small">{{ form.date.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.heure_debut.id_for_label }}" class="form-label">
+                                    {{ form.heure_debut.label }} *
+                                </label>
+                                {{ form.heure_debut }}
+                                {% if form.heure_debut.errors %}
+                                    <div class="text-danger small">{{ form.heure_debut.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.heure_fin.id_for_label }}" class="form-label">
+                                    {{ form.heure_fin.label }} *
+                                </label>
+                                {{ form.heure_fin }}
+                                {% if form.heure_fin.errors %}
+                                    <div class="text-danger small">{{ form.heure_fin.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.type_absence.id_for_label }}" class="form-label">
+                                    {{ form.type_absence.label }} *
+                                </label>
+                                {{ form.type_absence }}
+                                {% if form.type_absence.errors %}
+                                    <div class="text-danger small">{{ form.type_absence.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check mt-4">
+                                    {{ form.justifiee }}
+                                    <label class="form-check-label" for="{{ form.justifiee.id_for_label }}">
+                                        {{ form.justifiee.label }}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.motif.id_for_label }}" class="form-label">
+                                {{ form.motif.label }}
+                            </label>
+                            {{ form.motif }}
+                            {% if form.motif.errors %}
+                                <div class="text-danger small">{{ form.motif.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.date_justification.id_for_label }}" class="form-label">
+                                    {{ form.date_justification.label }}
+                                </label>
+                                {{ form.date_justification }}
+                                {% if form.date_justification.errors %}
+                                    <div class="text-danger small">{{ form.date_justification.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.document_justificatif.id_for_label }}" class="form-label">
+                                    {{ form.document_justificatif.label }}
+                                </label>
+                                {{ form.document_justificatif }}
+                                {% if form.document_justificatif.errors %}
+                                    <div class="text-danger small">{{ form.document_justificatif.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Enregistrer
+                            </button>
+                            <a href="{% url 'responsable_classe:absence_list' %}" class="btn btn-secondary">
+                                Annuler
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends 'eleve/base.html' %}
+{% block content %}
+<div class="alert alert-danger">
+    <h4>Erreur</h4>
+    <p>{{ message }}</p>
+    <a href="{% url 'eleve:dashboard' numero_etudiant=eleve.numero_etudiant|default:'' %}" class="btn btn-primary">Retour</a>
+</div>
+{% endblock %}

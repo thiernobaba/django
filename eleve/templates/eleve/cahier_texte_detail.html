@@ -1,0 +1,53 @@
+{% extends 'eleve/base.html' %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+    <a href="{% url 'eleve:dashboard' %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left"></i> Retour au tableau de bord
+    </a>
+</div>
+<div class="card">
+    <div class="card-header">
+        <h2>Cahier de texte - {{ cahier.date }}</h2>
+    </div>
+
+    <div class="card-body">
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <p><strong>Matière :</strong> {{ cahier.matiere.nom }}</p>
+                <p><strong>Classe :</strong> {{ cahier.classe.get_niveau_display }}</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Date :</strong> {{ cahier.date }}</p>
+                <p><strong>Professeur :</strong> {{ cahier.matiere.professeur.get_full_name }}</p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header bg-light">
+                <h3>Contenu du cours</h3>
+            </div>
+            <div class="card-body">
+                {{ cahier.contenu|linebreaks }}
+            </div>
+        </div>
+        
+        {% if cahier.travail_a_faire %}
+        <div class="card mt-4">
+            <div class="card-header bg-light">
+                <h3>Travail à faire</h3>
+            </div>
+            <div class="card-body">
+                {{ cahier.travail_a_faire|linebreaks }}
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="mt-4">
+            <a href="{% url 'eleve:cahier_texte_list' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Retour à la liste
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

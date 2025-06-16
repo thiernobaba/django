@@ -1,0 +1,93 @@
+{% extends "responsable_classe/base.html" %}
+{% block content %}
+<div class="page-header">
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="mb-0">
+                    <i class="fas fa-user-times me-3"></i>
+                    Statique de la classe
+                </h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Class Selection Form -->
+    <form method="get" class="mb-4">
+        <div class="row">
+            <div class="col-md-6">
+                {{ form.classe.label_tag }}
+                {{ form.classe }}
+            </div>
+            <div class="col-md-6 align-self-end">
+                <button type="submit" class="btn btn-primary">Afficher</button>
+            </div>
+        </div>
+    </form>
+
+    {% if stats %}
+    <h2>Statistiques pour {{ form.classe.value }}</h2>
+
+    <!-- Absences -->
+    <div class="card mb-4">
+        <div class="card-header">Absences (30 derniers jours)</div>
+        <div class="card-body">
+            <p><strong>Total:</strong> {{ stats.absences.total }}</p>
+            <p><strong>Justifiées:</strong> {{ stats.absences.justifiees }}</p>
+            <p><strong>Non justifiées:</strong> {{ stats.absences.non_justifiees }}</p>
+            <h5>Top 5 élèves (absences)</h5>
+            <ul>
+                {% for eleve in stats.absences.par_eleve %}
+                    <li>{{ eleve.eleve__nom }} {{ eleve.eleve__prenom }}: {{ eleve.total }} absences</li>
+                {% empty %}
+                    <li>Aucune absence enregistrée.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Retards -->
+    <div class="card mb-4">
+        <div class="card-header">Retards (30 derniers jours)</div>
+        <div class="card-body">
+            <p><strong>Total:</strong> {{ stats.retards.total }}</p>
+            <p><strong>Justifiés:</strong> {{ stats.retards.justifies }}</p>
+            <h5>Top 5 élèves (retards)</h5>
+            <ul>
+                {% for eleve in stats.retards.par_eleve %}
+                    <li>{{ eleve.eleve__nom }} {{ eleve.eleve__prenom }}: {{ eleve.total }} retards</li>
+                {% empty %}
+                    <li>Aucun retard enregistré.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Projets -->
+    <div class="card mb-4">
+        <div class="card-header">Projets</div>
+        <div class="card-body">
+            <p><strong>Total:</strong> {{ stats.projets.total }}</p>
+            <p><strong>En cours:</strong> {{ stats.projets.en_cours }}</p>
+            <p><strong>Corrigés:</strong> {{ stats.projets.corriges }}</p>
+            <p><strong>Note moyenne:</strong> {{ stats.projets.note_moyenne|floatformat:2 }}</p>
+            <p><strong>Taux de rendu:</strong> {{ stats.projets.taux_rendu|floatformat:2 }}%</p>
+        </div>
+    </div>
+
+    <!-- Observations -->
+    <div class="card mb-4">
+        <div class="card-header">Observations (30 derniers jours)</div>
+        <div class="card-body">
+            <p><strong>Total:</strong> {{ stats.observations.total }}</p>
+            <p><strong>Positives:</strong> {{ stats.observations.positives }}</p>
+            <p><strong>Négatives:</strong> {{ stats.observations.negatives }}</p>
+            <p><strong>Disciplinaires:</strong> {{ stats.observations.disciplinaires }}</p>
+        </div>
+    </div>
+    {% else %}
+    <p class="text-muted">Sélectionnez une classe pour afficher les statistiques.</p>
+    {% endif %}
+</div>
+{% endblock %}

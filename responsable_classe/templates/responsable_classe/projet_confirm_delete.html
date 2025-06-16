@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Supprimer le projet</h1>
+    <p>Êtes-vous sûr de vouloir supprimer le projet "<strong>{{ object.titre }}</strong>" ?</p>
+    <p>Classe: {{ object.classe }} | Matière: {{ object.matiere }} | Date limite: {{ object.date_limite|date:"d/m/Y" }}</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Supprimer</button>
+        <a href="{% url 'responsable_classe:projet_list' %}" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
+{% endblock %}

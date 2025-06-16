@@ -1,0 +1,88 @@
+{% extends "responsable_classe/base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">{{ projet.titre }}</h1>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Détails du projet</h5>
+            <p><strong>Classe:</strong> {{ projet.classe }}</p>
+            <p><strong>Matière:</strong> {{ projet.matiere }}</p>
+            <p><strong>Type:</strong> {{ projet.get_type_projet_display }}</p>
+            <p><strong>Statut:</strong> {{ projet.get_statut_display }}</p>
+            <p><strong>Date d'attribution:</strong> {{ projet.date_attribution|date:"d/m/Y" }}</p>
+            <p><strong>Date limite:</strong> {{ projet.date_limite|date:"d/m/Y" }}</p>
+            <p><strong>Jours restants:</strong> 
+                {% if projet.jours_restants >= 0 %}
+                    {{ projet.jours_restants }} jours
+                {% else %}
+                    En retard
+                {% endif %}
+            </p>
+            <p><strong>Coefficient:</strong> {{ projet.coefficient }}</p>
+            <p><strong>Description:</strong> {{ projet.description }}</p>
+            <p><strong>Consignes:</strong> {{ projet.consignes|default:"-" }}</p>
+            {% if projet.fichier_sujet %}
+                <p><strong>Fichier sujet:</strong> <a href="{{ projet.fichier_sujet.url }}" target="_blank">Télécharger</a></p>
+            {% endif %}
+            <a href="{% url 'responsable_classe:projet_update' projet.pk %}" class="btn btn-warning">Modifier</a>
+            <a href="{% url 'responsable_classe:projet_delete' projet.pk %}" class="btn btn-danger">Supprimer</a>
+            {% if projet.statut in 'ATTRIBUE EN_COURS' %}
+                <a href="{% url 'responsable_classe:corriger_rendus' projet.pk %}" class="btn btn-primary">Corriger les rendus</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <h2>Rendus</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Élève</th>
+                <th>Date de rendu</th>
+                <th>Note</th>
+                <th>Commentaire professeur</th>
+                <th>Retard</th>
+                <th>Fichier</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rendu in rendus %}
+            <tr>
+                <td>{{ rendu.eleve }}</td>
+                <td>{{ rendu.date_rendu|date:"d/m/Y H:i" }}</td>
+                <td>{{ rendu.note|default:"Non noté" }}</td>
+                <td>{{ rendu.commentaire_professeur|default:"-" }}</td>
+                <td>
+                    {% if rendu.est_en_retard %}
+                        Oui
+                    {% else %}
+                        Non
+                    {% endif %}
+                </td>
+                <td>
+                    {% if rendu.fichier_rendu %}
+                        <a href="{{ rendu.fichier_rendu.url }}" target="_blank">Télécharger</a>
+                    {% else %}
+                        Aucun
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">Aucun rendu pour ce projet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Statistiques</h2>
+    <div class="card">
+        <div class="card-body">
+            <p><strong>Total élèves:</strong> {{ stats.total_eleves }}</p>
+            <p><strong>Rendus soumis:</strong> {{ stats.rendus_count }}</p>
+            <p><strong>Taux de rendu:</strong> {{ stats.taux_rendu|floatformat:2 }}%</p>
+        </div>
+    </div>
+
+    <a href="{% url 'responsable_classe:projet_list' %}" class="btn btn-secondary mt-3">Retour à la liste</a>
+</div>
+{% endblock %}
