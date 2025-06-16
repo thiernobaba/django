@@ -16,6 +16,10 @@ SECRET_KEY = 'django-insecure-change-this-in-production'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://django-3-8h6n.onrender.com',
+]
+
 ALLOWED_HOSTS = [
     'django-3-8h6n.onrender.com',  # Votre domaine Render
     '127.0.0.1',                   # Développement local
