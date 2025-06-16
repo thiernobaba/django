@@ -16,7 +16,11 @@ SECRET_KEY = 'django-insecure-change-this-in-production'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost').split(',')
+ALLOWED_HOSTS = [
+    'django-3-8h6n.onrender.com',  # Votre domaine Render
+    '127.0.0.1',                   # Développement local
+    'localhost',                   # Développement local
+]
 
 TEMPLATES = [
     {
