@@ -1,6 +1,7 @@
 # gestion_scolaire/settings.py
 
 import os
+from decouple import config
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
