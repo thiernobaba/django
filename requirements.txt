@@ -1,103 +1,75 @@
-Django>=4.2
-gunicorn
-psycopg2-binary
-whitenoise
-django-crispy-forms
-crispy_bootstrap5
-anyio==3.6.2
-argon2-cffi==21.3.0
-argon2-cffi-bindings==21.2.0
-asttokens==2.0.8
-attrs==22.1.0
-Babel==2.10.3
-backcall==0.2.0
-beautifulsoup4==4.11.1
-bleach==5.0.1
-blinker==1.9.0
-certifi==2022.9.24
-cffi==1.15.1
-charset-normalizer==2.1.1
-click==8.1.8
-colorama==0.4.6
-dash==3.0.2
-debugpy==1.6.3
-decorator==5.1.1
-defusedxml==0.7.1
-entrypoints==0.4
-et-xmlfile==1.1.0
-executing==1.1.1
-fastjsonschema==2.16.2
-Flask==3.0.3
-greenlet==1.1.3.post0
-idna==3.4
-importlib_metadata==8.6.1
-ipykernel==6.16.2
-ipython==8.5.0
-ipython-genutils==0.2.0
-itsdangerous==2.2.0
-jedi==0.18.1
-Jinja2==3.1.2
-json5==0.9.10
-jsonschema==4.16.0
-jupyter-server==1.21.0
-jupyter_client==7.4.4
-jupyter_core==4.11.2
-jupyterlab==3.5.0
-jupyterlab-pygments==0.2.2
-jupyterlab_server==2.16.1
-MarkupSafe==2.1.1
-matplotlib-inline==0.1.6
-mistune==2.0.4
-narwhals==1.34.1
-nbclassic==0.4.5
-nbclient==0.7.0
-nbconvert==7.2.3
-nbformat==5.7.0
-nest-asyncio==1.5.6
-notebook==6.5.1
-notebook_shim==0.2.0
-numpy==1.23.4
-openpyxl==3.0.10
-packaging==21.3
-pandas==1.5.1
-pandasql==0.7.3
-pandocfilters==1.5.0
-parso==0.8.3
-pickleshare==0.7.5
-plotly==6.0.1
-prometheus-client==0.15.0
-prompt-toolkit==3.0.31
-psutil==5.9.3
-pure-eval==0.2.2
-pycparser==2.21
-Pygments==2.13.0
-pyodbc==4.0.34
-pyparsing==3.0.9
-pyrsistent==0.18.1
-python-dateutil==2.8.2
-pytz==2022.5
-pywin32==304
-pywinpty==2.0.9
-pyzmq==24.0.1
-requests==2.28.1
-retrying==1.3.4
-schedule==1.2.2
-Send2Trash==1.8.0
-six==1.16.0
-sniffio==1.3.0
-soupsieve==2.3.2.post1
-SQLAlchemy==1.4.42
-stack-data==0.5.1
-terminado==0.17.0
-tinycss2==1.2.1
-tomli==2.0.1
-tornado==6.2
-traitlets==5.5.0
-typing_extensions==4.13.2
-urllib3==1.26.12
-wcwidth==0.2.5
-webencodings==0.5.1
-websocket-client==1.4.1
-Werkzeug==3.0.6
-zipp==3.21.0
+# Core Django
+Django==5.0.7
+djangorestframework==3.15.2
 
+# Base de données
+psycopg2-binary==2.9.9  # PostgreSQL
+# mysqlclient==2.2.4    # MySQL (décommentez si nécessaire)
+
+# Authentification et sécurité
+django-allauth==0.57.0
+django-cors-headers==4.3.1
+PyJWT==2.8.0
+cryptography==41.0.7
+
+# Images et fichiers
+Pillow==10.0.1
+django-storages==1.14.2
+boto3==1.34.0  # Pour AWS S3
+
+# API et sérialisation
+djangorestframework-simplejwt==5.3.0
+django-filter==23.5
+drf-spectacular==0.27.0  # Documentation API automatique
+
+# Cache et performance
+redis==5.0.1
+django-redis==5.4.0
+celery==5.3.4
+
+# Développement et debug
+django-debug-toolbar==4.2.0
+django-extensions==3.2.3
+ipython==8.17.2
+
+# Tests
+pytest==7.4.3
+pytest-django==4.7.0
+factory-boy==3.3.0
+coverage==7.3.2
+
+# Déploiement et production
+gunicorn==21.2.0
+whitenoise==6.6.0
+python-decouple==3.8  # Gestion des variables d'environnement
+sentry-sdk[django]==1.38.0  # Monitoring des erreurs
+
+# Utilitaires
+requests==2.31.0
+python-dateutil==2.8.2
+pytz==2023.3
+
+# Internationalisation
+django-modeltranslation==0.18.11
+
+# Admin amélioré
+django-admin-interface==0.28.8
+django-import-export==3.3.1
+
+# Validation et formulaires
+django-crispy-forms==2.1
+crispy-bootstrap5==0.7
+
+# Gestion des emails
+django-anymail==10.2
+
+# Logging et monitoring
+structlog==23.2.0
+
+# Outils de développement
+black==23.11.0  # Formatage du code
+flake8==6.1.0   # Linting
+pre-commit==3.6.0  # Hooks git
+
+# Variables d'environnement
+python-dotenv==1.0.0
