@@ -76,3 +76,9 @@ pre-commit==4.0.1  # Hooks git
 
 # Variables d'environnement
 python-dotenv==1.0.1
+
+# Analyse de données
+pandas==2.2.3
+numpy==1.26.4
+openpyxl==3.1.5  # Pour lire/écrire des fichiers Excel
+xlsxwriter==3.2.0  # Pour créer des fichiers Excel
