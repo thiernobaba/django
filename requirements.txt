@@ -1,75 +1,78 @@
+# Spécifier la version Python compatible (ajoutez cette ligne dans runtime.txt)
+# python-3.11.9
+
 # Core Django
-Django==5.0.7
+Django==5.1.4
 djangorestframework==3.15.2
 
-# Base de données
-psycopg2-binary==2.9.9  # PostgreSQL
+# Base de données - versions compatibles Python 3.13
+psycopg2-binary==2.9.10  # PostgreSQL
 # mysqlclient==2.2.4    # MySQL (décommentez si nécessaire)
 
 # Authentification et sécurité
-django-allauth==0.57.0
-django-cors-headers==4.3.1
-PyJWT==2.8.0
-cryptography==41.0.7
+django-allauth==65.2.0
+django-cors-headers==4.4.0
+PyJWT==2.9.0
+cryptography==43.0.3
 
 # Images et fichiers
-Pillow==10.0.1
-django-storages==1.14.2
-boto3==1.34.0  # Pour AWS S3
+Pillow==11.0.0
+django-storages==1.14.4
+boto3==1.35.66  # Pour AWS S3
 
 # API et sérialisation
 djangorestframework-simplejwt==5.3.0
-django-filter==23.5
-drf-spectacular==0.27.0  # Documentation API automatique
+django-filter==24.3
+drf-spectacular==0.27.2  # Documentation API automatique
 
 # Cache et performance
-redis==5.0.1
+redis==5.2.0
 django-redis==5.4.0
-celery==5.3.4
+celery==5.4.0
 
 # Développement et debug
-django-debug-toolbar==4.2.0
+django-debug-toolbar==4.4.6
 django-extensions==3.2.3
-ipython==8.17.2
+ipython==8.30.0
 
 # Tests
-pytest==7.4.3
-pytest-django==4.7.0
-factory-boy==3.3.0
-coverage==7.3.2
+pytest==8.3.4
+pytest-django==4.9.0
+factory-boy==3.3.1
+coverage==7.6.9
 
 # Déploiement et production
-gunicorn==21.2.0
-whitenoise==6.6.0
+gunicorn==23.0.0
+whitenoise==6.8.2
 python-decouple==3.8  # Gestion des variables d'environnement
-sentry-sdk[django]==1.38.0  # Monitoring des erreurs
+sentry-sdk[django]==2.19.2  # Monitoring des erreurs
 
 # Utilitaires
-requests==2.31.0
-python-dateutil==2.8.2
-pytz==2023.3
+requests==2.32.3
+python-dateutil==2.9.0.post0
+pytz==2024.2
 
 # Internationalisation
-django-modeltranslation==0.18.11
+django-modeltranslation==0.19.8
 
 # Admin amélioré
 django-admin-interface==0.28.8
-django-import-export==3.3.1
+django-import-export==4.2.0
 
 # Validation et formulaires
-django-crispy-forms==2.1
-crispy-bootstrap5==0.7
+django-crispy-forms==2.3
+crispy-bootstrap5==2024.10
 
 # Gestion des emails
-django-anymail==10.2
+django-anymail==12.0
 
 # Logging et monitoring
-structlog==23.2.0
+structlog==24.4.0
 
 # Outils de développement
-black==23.11.0  # Formatage du code
-flake8==6.1.0   # Linting
-pre-commit==3.6.0  # Hooks git
+black==24.10.0  # Formatage du code
+flake8==7.1.1   # Linting
+pre-commit==4.0.1  # Hooks git
 
 # Variables d'environnement
-python-dotenv==1.0.0
+python-dotenv==1.0.1
